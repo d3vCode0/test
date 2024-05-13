@@ -25,7 +25,7 @@ jobs:
 
       - name: Check if builds branch exists
         run: |
-          BRANCH_NAME="your_branch_name"
+          BRANCH_NAME="builds"
           if ! git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
             git checkout -b $BRANCH_NAME
             git push origin $BRANCH_NAME
