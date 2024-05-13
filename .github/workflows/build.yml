@@ -23,6 +23,13 @@ jobs:
         with:
           path: "src"
 
+      - name: Create Branch
+        run: |
+          if ! git ls-remote --exit-code --heads origin builds; then
+            git checkout -b builds
+            git push origin builds
+          fi
+          
       - name: Checkout builds
         uses: actions/checkout@master
         with:
