@@ -23,12 +23,6 @@ jobs:
         with:
           path: "src"
 
-      - name: Checkout builds branch
-        uses: actions/checkout@master
-        with:
-          ref: "builds"
-          path: "builds"
-
       - name: Check if builds branch exists
         run: |
           if ! git ls-remote --exit-code --heads origin builds; then
@@ -36,6 +30,11 @@ jobs:
             git push origin builds
           fi
 
+      - name: Checkout builds branch
+        uses: actions/checkout@master
+        with:
+          ref: "builds"
+          path: "builds"
       
       - name: Clean old builds
         run: |
