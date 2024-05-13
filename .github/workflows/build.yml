@@ -25,10 +25,15 @@ jobs:
 
       - name: Check if builds branch exists
         run: |
-          if ! git ls-remote --exit-code --heads origin builds; then
-            git checkout -b builds
-            git push origin builds
+          BRANCH_NAME="your_branch_name"
+          if ! git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+            git checkout -b $BRANCH_NAME
+            git push origin $BRANCH_NAME
+          else
+            echo "Branch $BRANCH_NAME already exists."
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout builds branch
         uses: actions/checkout@master
