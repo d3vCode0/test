@@ -1,5 +1,6 @@
 name: Build
 
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency
 concurrency: 
   group: "build"
   cancel-in-progress: true
@@ -7,8 +8,9 @@ concurrency:
 on:
   push:
     branches:
-      - main
+      # choose your default branch
       - master
+      - main
     paths-ignore:
       - '*.md'
 
@@ -16,13 +18,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Initialize Git
-        run: git init
-
       - name: Checkout default branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
         with:
           path: "src"
+
+      - name: Checkout builds branch
+        uses: actions/checkout@master
+        with:
+          ref: "builds"
+          path: "builds"
 
       - name: Check if builds branch exists
         run: |
@@ -31,11 +36,6 @@ jobs:
             git push origin builds
           fi
 
-      - name: Checkout builds branch
-        uses: actions/checkout@v2
-        with:
-          ref: "builds"
-          path: "builds"
       
       - name: Clean old builds
         run: |
@@ -44,12 +44,6 @@ jobs:
           else
             echo "No files with .cs3 extension found, skipping cleanup."
           fi
-
-      - name: Checkout builds
-        uses: actions/checkout@master
-        with:
-          ref: "builds"
-          path: "builds"
       
       - name: Clean old builds
         # run: rm $GITHUB_WORKSPACE/builds/*.cs3
