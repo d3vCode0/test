@@ -25,15 +25,13 @@ class ExampleAPi : MainAPI() {
             it.toSearchResponse()
         }
         return newHomePageResponse(
-            val list = HomePageList(
-                name = request.name,
-                list = lists,
-                isHorizontalImages = true
-            ),
-            hasNext = true
-        )
+            HomePageList(
+            name = request.name,
+            lists,
+            isHorizontalImages = true
+            ))
     }
-
+    
     private fun Element.toSearchResponse(): SearchResponse? {
         val title = this.selectFirst("div.title h1")?.text()?.trim() ?: return null
         val href = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
