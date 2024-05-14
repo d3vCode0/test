@@ -8,7 +8,7 @@ import org.jsoup.nodes.Element
 
 
 class ExampleAPi : MainAPI() {
-    override var mainUrl = "https://example.com"
+    override var mainUrl = "https://ww3.animerco.org"
     override var name = "Example"
     override val hasMainPage = true
     override var lang = "en"
@@ -18,18 +18,23 @@ class ExampleAPi : MainAPI() {
     )
 
     override val mainPage = mainPageOf(
-        "${mainUrl}/" to "Home page",
-        "${mainUrl}/animes/page/" to "Animes",
-        "${mainUrl}/movies/page/" to "Movies",
+        "${mainUrl}/episodes/page/" to "Episodes",
         //add more here
     )
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val document = app.get(request.data).document
-        val lists = document.select("div.home div.animes").mapNotNull {
+        val lists = document.select("div.page-content div.row div.col-12").mapNotNull {
             it.toSearchResponse()
         }
-        return newHomePageResponse(request.name, lists)
+        return newHomePageResponse(
+            val list = HomePageList(
+                name = request.name,
+                list = lists,
+                isHorizontalImages = true
+            ),
+            hasNext = true
+        )
     }
 
     private fun Element.toSearchResponse(): SearchResponse? {
