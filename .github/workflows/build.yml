@@ -13,28 +13,17 @@ on:
       - main
     paths-ignore:
       - '*.md'
-    tags:
-      - 'v*'
 
 jobs:
   build:
-    permissions:
-      contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout default branch
+      - name: Checkout
         uses: actions/checkout@master
         with:
           path: "src"
-      # - name: Add Builds
-      - uses: GuillaumeFalourd/create-other-repo-branch-action@v1.5
-        with:
-          repository_owner: GuillaumeFalourd
-          repository_name: poc-github-actions
-          new_branch_name: builds
-          access_token: ${{ secrets.ACCESS_TOKEN}}
 
-      - name: Checkout builds branch
+      - name: Checkout builds
         uses: actions/checkout@master
         with:
           ref: "builds"
