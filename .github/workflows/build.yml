@@ -13,9 +13,13 @@ on:
       - main
     paths-ignore:
       - '*.md'
+    tags:
+      - 'v*'
 
 jobs:
   build:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout default branch
@@ -23,31 +27,24 @@ jobs:
         with:
           path: "src"
 
-      - name: Check if builds branch exists
-        run: |
-          BRANCH_NAME="builds"
-          if ! git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
-            git checkout -b $BRANCH_NAME
-            git push origin $BRANCH_NAME
-          else
-            echo "Branch $BRANCH_NAME already exists."
-          fi
+      - name: Checkout code
+        uses: actions/checkout@v4.1.4
+
+      - name: Create Branch
+        id: create_branch
+        uses: lablnet/create-branch-from-tag@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
 
       - name: Checkout builds branch
         uses: actions/checkout@master
         with:
           ref: "builds"
           path: "builds"
-      
-      - name: Clean old builds
-        run: |
-          if ls $GITHUB_WORKSPACE/builds/*.cs3 1> /dev/null 2>&1; then
-            rm $GITHUB_WORKSPACE/builds/*.cs3
-          else
-            echo "No files with .cs3 extension found, skipping cleanup."
-          fi
       
       - name: Clean old builds
         # run: rm $GITHUB_WORKSPACE/builds/*.cs3
