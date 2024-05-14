@@ -26,19 +26,13 @@ jobs:
         uses: actions/checkout@master
         with:
           path: "src"
-
-      - name: Checkout code
-        uses: actions/checkout@v4.1.4
-
-      - name: Create Branch
-        id: create_branch
-        uses: lablnet/create-branch-from-tag@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Add Builds
+      - uses: GuillaumeFalourd/create-other-repo-branch-action@v1.5
         with:
-          tag_name: ${{ github.ref }}
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
+          repository_owner: GuillaumeFalourd
+          repository_name: poc-github-actions
+          new_branch_name: builds
+          access_token: ${{ secrets.ACCESS_TOKEN}}
 
       - name: Checkout builds branch
         uses: actions/checkout@master
