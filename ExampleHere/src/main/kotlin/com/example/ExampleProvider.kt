@@ -21,9 +21,12 @@ class ExampleAPi : MainAPI() {
         "$mainUrl/movies/page/" to "Movies"
     )
     private fun Element.toSearchResponse(): SearchResponse? {
-        val title = this.selectFirst("div.info h3")?.text()?.trim() ?: return null
-        val href = this.selectFirst("a")?.attr("href") ?: return null
-        val posterUrl = this.selectFirst("a")?.attr("data-src") ?: return null
+        val title = this.selectFirst("a.image")?.attr("title") ?: return null
+        val postId = this?.attr("id")?.split("-") ?: return null
+        val href = "https://ww3.animerco.org/?page_id=${postId[1]}" ?: this.selectFirst("a.image")?.attr("href") ?: return null
+        val posterUrl = this.selectFirst("a.image")?.attr("data-src") ?: "https://placehold.jp/500x750.png"
+
+
         return newMovieSearchResponse(title, href, TvType.Movie, true){
             this.posterUrl = posterUrl
         }
