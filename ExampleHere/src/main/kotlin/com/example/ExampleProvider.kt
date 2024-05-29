@@ -21,10 +21,11 @@ class ExampleAPi : MainAPI() {
         "$mainUrl/movies/page/" to "Movies"
     )
     private fun Element.toSearchResponse(): SearchResponse? {
-        val title = this.selectFirst("a.image")?.attr("title") ?: return null
-        val postId = this?.attr("id")?.split("-") ?: return null
-        val href = "https://ww3.animerco.org/?page_id=${postId[1]}" ?: this.selectFirst("a.image")?.attr("href") ?: return null
-        val posterUrl = this.selectFirst("a.image")?.attr("data-src") ?: "https://placehold.jp/500x750.png"
+        val title = this.selectFirst("div.anime-card a")?.attr("title") ?: return null
+        // val postId = this?.attr("id")?.split("-") ?: return null
+        // val href = "https://ww3.animerco.org/?page_id=${postId[1]}" ?: this.selectFirst("a.image")?.attr("href") ?: return null
+        val href = this.selectFirst("div.anime-card a")?.attr("href") ?: return null
+        val posterUrl = this.selectFirst("div.anime-card a")?.attr("data-src") ?: "https://placehold.jp/500x750.png"
 
 
         return newMovieSearchResponse(title, href, TvType.Movie, true){
@@ -32,7 +33,7 @@ class ExampleAPi : MainAPI() {
         }
     }
     override suspend fun getMainPage(page: Int, request : MainPageRequest): HomePageResponse {
-        val document = app.get(request.data).document
+        val document = app.get(request.data + page).document
         val list = document.select("div.page-content .row div.box-5x1").mapNotNull {
             it.toSearchResponse()
         }
