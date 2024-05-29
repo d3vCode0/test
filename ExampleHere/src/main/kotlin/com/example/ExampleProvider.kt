@@ -44,9 +44,9 @@ class ExampleAPi : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val document = app.get(request.data + page).document
+        val document = app.get(url).document
         if(document.select("title").text() == "Just a moment...") {
-            val document = app.get(request.data + page, interceptor = cfKiller, timeout = 120).document
+            val document = app.get(url, interceptor = cfKiller, timeout = 120).document
         }
 
         val title     = document.selectFirst("div.head-box div.media-title h3")?.text()?.trim() ?: document.selectFirst("div.head-box div.media-title h1")?.text()?.trim() ?: return null
