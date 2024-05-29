@@ -45,8 +45,16 @@ class ExampleAPi : MainAPI() {
             it.toSearchResponse()
         }
     }
-    // override suspend fun load(url: String): LoadResponse {
-    //     return newMovieLoadResponse()
-    // }
+    override suspend fun load(url: String): LoadResponse? {
+        var document = app.get(url).document
+        if(document.select("title").text() == "Just a moment...") {
+            document = app.get(url, interceptor = cfKiller, timeout = 120).document
+        }
+
+        val title = document.selectFirst("div.head-box div.media-title h3")?.text()?.trim() ?: return null
+        Log.d(":D3V: title", title)
+        return newAnimeLoadResponse(title, url, TvType.Anime) {
+        }
+    }
     // override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {}
 }
