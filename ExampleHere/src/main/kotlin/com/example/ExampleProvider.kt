@@ -22,7 +22,7 @@ class ExampleAPi : MainAPI() {
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = app.get(request.data + page).document
         if(doc.select("title").text() == "Just a moment...") {
-            doc = app.get(request.data + page, interceptor = cfKiller, timeout = 120).document
+            val doc = app.get(request.data + page, interceptor = cfKiller, timeout = 120).document
         }
         val home = doc.select("div.page-content .row div.box-5x1").mapNotNull {
             it.toSearchResponse()
@@ -37,7 +37,7 @@ class ExampleAPi : MainAPI() {
         Log.d("D3V title",title)
         Log.d("D3V title",href)
 
-        newMovieSearchResponse(title, href, TvType.AnimeMovie) {
+        return newMovieSearchResponse(title, href, TvType.AnimeMovie) {
         }
     }
 
