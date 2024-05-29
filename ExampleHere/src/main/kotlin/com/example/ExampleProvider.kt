@@ -52,10 +52,23 @@ class ExampleAPi : MainAPI() {
         val title     = document.selectFirst("div.head-box div.media-title h3")?.text()?.trim() ?: document.selectFirst("div.head-box div.media-title h1")?.text()?.trim() ?: return null
         val bgImage   = fixUrlNull(document.selectFirst("div.banner")?.attr("data-src")) ?: return null
         val posterUrl = fixUrlNull(document.selectFirst("div.anime-card div.image")?.attr("data-src")) ?: fixUrlNull(document.selectFirst("div.head-box div.banner")?.attr("data-src")) ?: return null
-        
+        val tags      = document.select("div.genres a").mapNotNull{ it?.text()?.trim() } ?: return null
+        val plot      = document.selectFirst("div.content p")?.text()?.trim() ?: return null
+        val trailer   = fixUrlNull(document.selectFirst("button#btn-trailer")?.attr("data-href")) ?: return null
+        val rating    = document.selectFirst("span.score")?.text()?.toRatingInt() ?: return null
+        val year      = document.selectFirst("ul.media-info li:contains(بداية العرض:) a")?.text()?.toIntOrNull() ?: return null
+        val duration  = document.selectFirst("ul.media-info li:contains(مدة الحلقة:) span")?.text()?.getIntFromText() ?: return null
+
         Log.d("D3V > title", title)
         Log.d("D3V > bg", bgImage)
         Log.d("D3V > poster", posterUrl)
+        Log.d("D3V > tags",tags)
+        Log.d("D3V > plot",plot)
+        Log.d("D3V > trailer",trailer)
+        Log.d("D3V > rating",rating)
+        Log.d("D3V > year", year)
+        Log.d("D3V > dur", duration)
+        
         return newAnimeLoadResponse(title, url, TvType.Anime, true) {
             this.posterUrl = posterUrl
         }
