@@ -33,7 +33,7 @@ class ExampleAPi : MainAPI() {
         val url = select("div.anime-card a")?.attr("href") ?: return null
         val t = this.selectFirst("div.info h3")?.text()?.trim()
         val title = when {
-            t.isNullOrEmpty() -> t
+            !t.isNullOrEmpty() -> t
             t == null -> "No Title"
             else -> null
         } ?: return null
