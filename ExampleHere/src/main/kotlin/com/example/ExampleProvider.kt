@@ -20,7 +20,7 @@ class ExampleAPi : MainAPI() {
 
     override val mainPage = mainPageOf(
         "$mainUrl/movies/page/" to "Movies",
-        "$mainUrl/animes/page/" to "Animes",
+        // "$mainUrl/animes/page/" to "Animes",
     )
     override suspend fun getMainPage(page: Int, request : MainPageRequest): HomePageResponse {
         val document = app.get(request.data + page).document
@@ -32,16 +32,13 @@ class ExampleAPi : MainAPI() {
     private fun Element.toSearchMovies(): SearchResponse? {
         val url = select("div.anime-card a")?.attr("href") ?: return null
         val poster = select("div.anime-card a")?.attr("data-src")
+        if(poster.isNullOrEmpty()) poster else "https://fakeimg.pl/500x750/4d4d4d/dbdbdb?text=NO+IMAGE&font=bebas"
         val title = select("div.anime-card .info h3")?.text()?.trim() ?: return null
         if(title.isNullOrEmpty()) title else "Error"
 
-        return MovieSearchResponse(
-            title,
-            url,
-            this@ExampleAPi.name,
-            TvType.AnimeMovie,
-            poster
-        )
+        return newMovieSearchResponse( title, url, TvType.AnimeMovie){
+            this.posterUrl = poster
+        }
     }
     // override suspend fun search(query: String): List<SearchResponse> {}
     // override suspend fun load(url: String): LoadResponse? {}
