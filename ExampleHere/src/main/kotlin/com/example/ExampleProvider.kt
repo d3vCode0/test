@@ -52,7 +52,16 @@ class ExampleAPi : MainAPI() {
             document = app.get(url, interceptor = cfKiller, timeout = 120).document
         }
         val title = document.selectFirst("div.head-box div.media-title h3")?.text()?.trim() ?: "Not find"
-        val posterUrl = fixUrlNull(document.selectFirst("div.anime-card div.image")?.attr("data-src")) ?: return null
+
+        val poster = document.selectFirst("div.anime-card div.image")?.attr("data-src")
+        val poster2 = document.selectFirst("div.head-box div.banner")?.attr("data-src")
+        val posterUrl = if(poster.isNullOrEmpty()) {
+            poster
+        } else if (poster2.isNullOrEmpty()) {
+            poster2
+        } else {
+            null
+        }
 
         Log.d(":D3V: title", title)
         return newAnimeLoadResponse(title, url, TvType.Anime) {
