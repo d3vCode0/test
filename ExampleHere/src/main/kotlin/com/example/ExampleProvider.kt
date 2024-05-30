@@ -19,54 +19,31 @@ class ExampleAPi : MainAPI() {
     private  val cfKiller = CloudflareKiller()
 
     override val mainPage = mainPageOf(
-        "$mainUrl/movies/page/" to "Movies"
+        "$mainUrl/movies/page/" to "Movies",
+        "$mainUrl/animes/page/" to "Animes",
     )
-    private fun Element.toSearchResponse(): SearchResponse? {
-        val title = this.selectFirst("div.anime-card a")?.attr("title") ?: return null
-        // val postId = this?.attr("id")?.split("-") ?: return null
-        // val href = "https://ww3.animerco.org/?page_id=${postId[1]}" ?: this.selectFirst("a.image")?.attr("href") ?: return null
-        val href = this.selectFirst("div.anime-card a")?.attr("href") ?: return null
-        val posterUrl = this.selectFirst("div.anime-card a")?.attr("data-src") ?: "https://placehold.jp/500x750.png"
-
-
-        return newMovieSearchResponse(title, href, TvType.Movie, true){
-            this.posterUrl = posterUrl
-        }
-    }
     override suspend fun getMainPage(page: Int, request : MainPageRequest): HomePageResponse {
         val document = app.get(request.data + page).document
-        val list = document.select("div.page-content .row div.box-5x1").mapNotNull {
-            it.toSearchResponse()
+        val list = document.select("div.container div.row div").mapNotNull {element ->
+            element.toSearchMovies()
         }
         return newHomePageResponse(request.name, list)
     }
-    override suspend fun search(query: String): List<SearchResponse> {
-        val document = app.get("${mainUrl}/?s=${query}").document
-        return document.select("div.page-content .row div.col-12").mapNotNull {
-            it.toSearchResponse()
-        }
-    }
-    override suspend fun load(url: String): LoadResponse? {
-        var document = app.get(url).document
-        if(document.select("title").text() == "Just a moment...") {
-            document = app.get(url, interceptor = cfKiller, timeout = 120).document
-        }
-        val title = document.selectFirst("div.head-box div.media-title h3")?.text()?.trim() ?: "Not find"
+    private fun Element.toSearchMovies(): SearchResponse? {
+        val url = select("div.anime-card a")?.attr("href") ?: return null
+        val poster = select("div.anime-card a")?.attr("data-src")
+        val title = select("div.anime-card .info h3")?.text()?.trim() ?: return null
+        if(title.isNullOrEmpty()) title else "Error"
 
-        val poster = document.selectFirst("div.anime-card div.image")?.attr("data-src")
-        val poster2 = document.selectFirst("div.head-box div.banner")?.attr("data-src")
-        val posterUrl = if(poster.isNullOrEmpty()) {
+        return MovieSearchResponse(
+            title,
+            url,
+            this@ExampleAPi.name,
+            TvType.AnimeMovie,
             poster
-        } else if (poster2.isNullOrEmpty()) {
-            poster2
-        } else {
-            null
-        }
-
-        Log.d(":D3V: title", title)
-        return newAnimeLoadResponse(title, url, TvType.Anime) {
-            this.posterUrl = posterUrl
-        }
+        )
     }
+    // override suspend fun search(query: String): List<SearchResponse> {}
+    // override suspend fun load(url: String): LoadResponse? {}
     // override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {}
 }
