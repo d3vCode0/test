@@ -31,13 +31,13 @@ class ExampleAPi : MainAPI() {
     }
     private fun Element.toSearchMovies(): SearchResponse? {
         val url = select("div.anime-card a")?.attr("href") ?: return null
-        val poster = if(select("div.anime-card a")?.attr("data-src").isNullOrEmpty()){
+        val poster = if(!select("div.anime-card a")?.attr("data-src").isNullOrEmpty()){
             select("div.anime-card a")?.attr("data-src")
         }else{
             "https://fakeimg.pl/500x750/4d4d4d/dbdbdb?text=NO+IMAGE&font=bebas"
         } ?: return null
 
-        val title = if(select("div.anime-card .info h3")?.text()?.trim().isNullOrEmpty()){
+        val title = if(!select("div.anime-card .info h3")?.text()?.trim().isNullOrEmpty()){
             select("div.anime-card .info h3")?.text()?.trim()
         }else{
             "ERROR"
