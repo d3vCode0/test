@@ -51,7 +51,7 @@ class ExampleAPi : MainAPI() {
         if(document.select("title").text() == "Just a moment...") {
             document = app.get(url, interceptor = cfKiller, timeout = 120).document
         }
-        val title = document.selectFirst("div.head-box div.media-title h3")?.text()?.trim() ?: return null
+        val title = document.selectFirst("div.head-box div.media-title h3")?.text()?.trim() ?: "Not find"
         val posterUrl = fixUrlNull(document.selectFirst("div.anime-card div.image")?.attr("data-src")) ?: return null
 
         Log.d(":D3V: title", title)
