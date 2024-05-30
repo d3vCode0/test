@@ -31,20 +31,15 @@ class ExampleAPi : MainAPI() {
     }
     private fun Element.toSearchMovies(): SearchResponse? {
         val url = select("div.anime-card a")?.attr("href") ?: return null
-        val poster = if(!select("div.anime-card a")?.attr("data-src").isNullOrEmpty()){
-            select("div.anime-card a")?.attr("data-src")
-        }else{
-            "https://fakeimg.pl/500x750/4d4d4d/dbdbdb?text=NO+IMAGE&font=bebas"
+        val t = this.selectFirst("div.info h3")?.text()?.trim()
+        val title = when {
+            t.isNullOrEmpty() -> t
+            t == null -> "No Title"
+            else -> null
         } ?: return null
 
-        val title = if(!select("div.anime-card .info h3")?.text()?.trim().isNullOrEmpty()){
-            select("div.anime-card .info h3")?.text()?.trim()
-        }else{
-            "ERROR"
-        } ?: return null
-
-        return newMovieSearchResponse( title, url, TvType.AnimeMovie){
-            this.posterUrl = poster
+        return newMovieSearchResponse(title, url, TvType.AnimeMovie){
+            // this.posterUrl = poster
         }
     }
     // override suspend fun search(query: String): List<SearchResponse> {}
