@@ -7,6 +7,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 import com.lagradost.cloudstream3.network.CloudflareKiller
 import org.jsoup.nodes.Element
+import org.jsoup.nodes.Document
 
 class ExampleAPi : MainAPI() {
     override var lang = "ar"
@@ -50,10 +51,12 @@ class ExampleAPi : MainAPI() {
         if(document.select("title").text() == "Just a moment...") {
             document = app.get(url, interceptor = cfKiller, timeout = 120).document
         }
-
         val title = document.selectFirst("div.head-box div.media-title h3")?.text()?.trim() ?: return null
+        val posterUrl = fixUrlNull(document.selectFirst("div.anime-card div.image")?.attr("data-src")) ?: return null
+
         Log.d(":D3V: title", title)
         return newAnimeLoadResponse(title, url, TvType.Anime) {
+            this.posterUrl = posterUrl
         }
     }
     // override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {}
