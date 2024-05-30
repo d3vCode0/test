@@ -1,0 +1,14 @@
+*.iml
+*.py
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+**/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+.vscode
+ExampleHere/src/main/kotlin/com/cloudstream3

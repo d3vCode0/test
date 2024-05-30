@@ -1,0 +1,23 @@
+[
+    {
+        "iconUrl": "https://ww3.animerco.org/wp-content/uploads/2024/03/apple-touch-icon.png",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/d3vCode0/test",
+        "fileSize": 6560,
+        "status": 1,
+        "language": "ar",
+        "authors": [
+            "d3vCode0"
+        ],
+        "tvTypes": [
+            "AnimeMovie",
+            "Anime",
+            "OVA"
+        ],
+        "version": 1,
+        "internalName": "ExampleHere",
+        "description": "Description Here",
+        "url": "https://raw.githubusercontent.com/d3vCode0/test/builds/ExampleHere.cs3",
+        "name": "ExampleHere"
+    }
+]

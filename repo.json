@@ -1,0 +1,8 @@
+{
+    "name": "test",
+    "description": "Updating the Cloudstream Arabic Provider. Feel free to join the Cloudstream Discord server for the latest information.",
+    "manifestVersion": 1,
+    "pluginLists": [
+      "https://raw.githubusercontent.com/d3vCode0/test/builds/plugins.json"
+    ]
+  }
