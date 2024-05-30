@@ -13,7 +13,6 @@ class ExampleAPi : MainAPI() {
     override var lang = "ar"
     override var mainUrl = "https://ww3.animerco.org/"
     override var name = "Animerco"
-    override val usesWebView = false
     override val hasMainPage = true
     override val supportedTypes = setOf(TvType.Anime)
     private  val cfKiller = CloudflareKiller()
@@ -24,8 +23,8 @@ class ExampleAPi : MainAPI() {
     )
     override suspend fun getMainPage(page: Int, request : MainPageRequest): HomePageResponse {
         val document = app.get(request.data + page).document
-        val list = document.select("div.container div.row div").mapNotNull {element ->
-            element.toSearchMovies()
+        val list = document.select("div.container div.row div").mapNotNull {
+            it.toSearchMovies()
         }
         return newHomePageResponse(request.name, list)
     }
